@@ -7,6 +7,8 @@
 
   networking.hostName = "Sudachi";
 
+  system.primaryUser = vars.user;
+
   users.users.${vars.user} = {
     home = "/Users/${vars.user}";
   };
