@@ -70,10 +70,10 @@
       formatter = forAllSystems (
         system:
         let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ (import ./overlays { inherit inputs; }) ];
-        };
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ (import ./overlays { inherit inputs; }) ];
+          };
         in
         pkgs.nixpkgs-fmt
       );
