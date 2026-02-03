@@ -18,8 +18,7 @@ This document provides guidelines for AI agents and automated tools working with
 | `home/<user>/default.nix` | Home Manager entry point |
 | `home/<user>/programs/*.nix` | Home Manager modules organized by responsibility |
 | `overlays/default.nix` | Package overlays |
-| `secrets/` | SOPS-encrypted secrets (never commit `*.yaml`, only `*.example`) |
-| `.sops.yaml` | SOPS age key configuration |
+| `secrets/` | Secret examples (never commit `*.yaml`, only `*.example`) |
 
 ## Rules
 
@@ -70,8 +69,6 @@ nix flake check
 # Update flake inputs
 nix flake update
 
-# Edit encrypted secrets
-sops secrets/api-keys.yaml
 ```
 
 ## Common Agent Tasks

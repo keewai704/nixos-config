@@ -11,7 +11,7 @@
   ];
 
   home.username = vars.user;
-  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${vars.user}" else "/home/${vars.user}";
+  home.homeDirectory = "/home/${vars.user}";
   home.stateVersion = "26.05";
 
   xdg.enable = true;

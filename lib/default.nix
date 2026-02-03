@@ -23,6 +23,4 @@ in
       ];
     };
 
-  mkDarwinSystem = { host }:
-    throw "Darwin support removed: ${host}";
 }
