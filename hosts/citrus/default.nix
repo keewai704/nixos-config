@@ -14,7 +14,7 @@ in
     inputs.home-manager.nixosModules.home-manager
     inputs.dankmaterialshell.nixosModules.dank-material-shell
     ./hardware-configuration.nix
-    ../../modules/nixos/secure-boot.nix
+    # ../../modules/nixos/secure-boot.nix
     ../../modules/nixos/niri.nix
     ../../modules/nixos/wayland.nix
     ../../modules/nixos/fcitx5.nix
@@ -23,11 +23,18 @@ in
     ../common/nix-ld.nix
   ];
 
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
   boot.initrd.systemd.enable = true;
   boot.initrd.systemd.contents."/lib".source = lib.mkForce initrdModulesRoot;
 
   networking.hostName = "Citrus";
+
+  time.timeZone = "Asia/Tokyo";
+  i18n.defaultLocale = "ja_JP.UTF-8";
+  i18n.supportedLocales = [ "ja_JP.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" ];
 
   users.users.${vars.user} = {
     isNormalUser = true;
@@ -81,6 +88,8 @@ in
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.warn-dirty = false;
+  nix.settings.allow-dirty = true;
 
   system.stateVersion = "24.11";
 }
