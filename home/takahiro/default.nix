@@ -5,7 +5,6 @@
     ./programs/git.nix
     ./programs/cli-tools.nix
     ./programs/dev-tools.nix
-  ] ++ lib.optionals pkgs.stdenv.isLinux [
     inputs.dankmaterialshell.homeModules.dank-material-shell
     inputs.dankmaterialshell.homeModules.niri
     ./programs/dank-material-shell.nix
