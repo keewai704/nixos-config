@@ -28,8 +28,6 @@
     };
   };
 
-  # Load NVIDIA kernel module
-  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
   boot.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
 
   # Blacklist nouveau driver
