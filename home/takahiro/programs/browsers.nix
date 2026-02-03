@@ -20,12 +20,14 @@ in
       BackgroundAppUpdate = false;
       DisableAppUpdate = true;
     };
-    profiles.default = let
-      photoshow = pkgs.fetchurl {
-        url = "https://addons.mozilla.org/firefox/downloads/file/4672520/photoshow-4.86.1.xpi";
-        sha256 = "sha256-zXdkl2xx4398mQeorT6eX8qC4E7N1UVFYTPzXog6T5Q=";
-      };
-    in {
+    profiles.default =
+      let
+        photoshow = pkgs.fetchurl {
+          url = "https://addons.mozilla.org/firefox/downloads/file/4672520/photoshow-4.86.1.xpi";
+          sha256 = "sha256-zXdkl2xx4398mQeorT6eX8qC4E7N1UVFYTPzXog6T5Q=";
+        };
+      in
+      {
       settings = {
         "extensions.autoDisableScopes" = 0;
       };
@@ -36,7 +38,9 @@ in
         decentraleyes
         tampermonkey
         darkreader
-      ] ++ [ photoshow ];
+      ] ++ [
+        photoshow
+      ];
     };
   };
 }
