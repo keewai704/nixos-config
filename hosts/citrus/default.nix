@@ -14,8 +14,7 @@
     ../common/nix-ld.nix
   ];
 
-  # Using standard kernel to avoid build issues
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxKernel.kernels.linux_xanmod_latest;
 
   networking.hostName = "Citrus";
 
