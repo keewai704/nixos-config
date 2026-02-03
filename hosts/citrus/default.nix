@@ -1,6 +1,6 @@
 { config, inputs, vars, pkgs, lib, ... }:
 let
-  initrdModulesRoot = pkgs.runCommand "initrd-modules-root" { } ''
+  initrdModulesRoot = pkgs.runCommand "initrd-modules-root" { allowSubstitutes = false; preferLocalBuild = true; } ''
     mkdir -p $out
     ln -s ${config.system.build.modulesClosure}/lib/modules $out/modules
     if [ -d ${config.system.build.modulesClosure}/lib/firmware ]; then
