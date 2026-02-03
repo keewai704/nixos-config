@@ -14,10 +14,8 @@
     ../common/nix-ld.nix
   ];
 
-  # XanMod kernel for low-latency gaming and desktop performance
-  # Note: xanmod_rt is not directly available in nixpkgs yet (see: https://github.com/NixOS/nixpkgs/issues/383117)
-  # Using xanmod_latest which includes performance optimizations
-  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+  # Using standard kernel to avoid build issues
+  boot.kernelPackages = pkgs.linuxPackages;
 
   networking.hostName = "Citrus";
 
