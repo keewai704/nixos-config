@@ -1,4 +1,4 @@
-{ config, inputs, vars, pkgs, ... }:
+{ config, inputs, vars, pkgs, lib, ... }:
 let
   initrdModulesRoot = pkgs.runCommand "initrd-modules-root" { } ''
     mkdir -p $out
@@ -24,13 +24,7 @@ in
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
-  boot.initrd.systemd.suppressedStorePaths = [ "${config.system.build.modulesClosure}/lib" ];
-  boot.initrd.systemd.storePaths = [
-    {
-      source = initrdModulesRoot;
-      target = "/lib";
-    }
-  ];
+  boot.initrd.systemd.contents."/lib".source = lib.mkForce initrdModulesRoot;
 
   networking.hostName = "Citrus";
 
