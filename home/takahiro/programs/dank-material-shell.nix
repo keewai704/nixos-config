@@ -4,7 +4,7 @@
     enable = true;
     niri = {
       enableKeybinds = true;
-      enableSpawn = false;
+      enableSpawn = true;
     };
   };
 }

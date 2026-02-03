@@ -8,9 +8,5 @@
       system = "x86_64-linux";
       type = "nixos";
     };
-    Sudachi = {
-      system = "aarch64-darwin";
-      type = "darwin";
-    };
   };
 }

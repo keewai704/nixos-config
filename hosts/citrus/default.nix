@@ -28,12 +28,24 @@
       restartIfChanged = true;
     };
     enableSystemMonitoring = true;
+    enableClipboard = true;
     enableVPN = true;
     enableDynamicTheming = true;
     enableAudioWavelength = true;
     enableCalendarEvents = true;
-    enableClipboardPaste = true;
-    package = inputs.dankmaterialshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  };
+
+  services.displayManager.dms-greeter = {
+    enable = true;
+    compositor.name = "niri";
+  };
+
+  programs.dsearch = {
+    enable = true;
+    systemd = {
+      enable = true;
+      target = "graphical-session.target";
+    };
   };
 
   home-manager = {
@@ -44,6 +56,10 @@
     };
     users.${vars.user} = import ../../home/takahiro/default.nix;
   };
+
+  environment.systemPackages = with pkgs; [
+    dgop
+  ];
 
   fonts.packages = with pkgs; [
     hackgen

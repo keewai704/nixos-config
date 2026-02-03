@@ -3,7 +3,6 @@
 Multi-platform Nix flake configuration for:
 
 - Citrus (NixOS)
-- Sudachi (macOS, nix-darwin)
 
 ## Requirements
 
@@ -52,11 +51,6 @@ sudo sbctl enroll-keys --microsoft
 sudo sbctl verify
 ```
 
-### Sudachi (macOS)
-
-```bash
-darwin-rebuild switch --flake .#Sudachi
-```
 
 ## Common maintenance
 

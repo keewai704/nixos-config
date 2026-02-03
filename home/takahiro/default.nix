@@ -9,6 +9,8 @@
     inputs.dankmaterialshell.homeModules.dank-material-shell
     inputs.dankmaterialshell.homeModules.niri
     ./programs/dank-material-shell.nix
+    ./programs/danksearch.nix
+    ./programs/dgop.nix
   ];
 
   home.username = vars.user;

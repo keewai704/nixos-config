@@ -13,7 +13,6 @@
 
 マルチプラットフォーム対応のNixOS flakes設定:
 - **NixOS Native**: Citrus (フルデスクトップ + Wayland Native)
-- **macOS**: Sudachi (nix-darwin + Homebrew)
 
 ### Core Philosophy
 - 共通化できる部分は最大限共通化
@@ -28,7 +27,6 @@
 | Host | Platform | System | Type | Desktop |
 |------|----------|--------|------|---------|
 | Citrus | NixOS Native | x86_64-linux | nixos | niri (Wayland) |
-| Sudachi | macOS | aarch64-darwin | darwin | Aqua |
 
 ### User Configuration
 ```nix
@@ -55,7 +53,6 @@ nixos-config/
 │   │   ├── sops.nix           # sops-nixシークレット管理
 │   │   └── security.nix       # ファイアウォール、SSH、fail2ban
 │   ├── citrus/                # NixOS - Wayland Native
-│   └── sudachi/               # macOS - nix-darwin + Homebrew
 ├── modules/
 │   ├── common/                # 全プラットフォーム共通
 │   │   ├── default.nix
@@ -71,7 +68,6 @@ nixos-config/
 │   │   ├── firefox.nix        # Wayland版Firefox
 │   │   ├── dankmaterialshell.nix
 │   │   └── secure-boot.nix    # Secure Boot (lanzaboote)
-│   └── darwin/                # macOS固有
 │       └── default.nix
 ├── home/
 │   └── takahiro/
@@ -100,11 +96,6 @@ nixos-config/
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    # macOS support
-    nix-darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     
     # DankMaterialShell
     dankmaterialshell = {
@@ -214,21 +205,6 @@ nixos-config/
 | fcitx5-mozc-ut | Mozcエンジン | i18n.inputMethod.fcitx5.addons |
 | hackgen | プログラミングフォント | fonts.packages |
 | noto-fonts-cjk-sans | 日本語フォント | fonts.packages |
-
-### 5.3 macOS Only (Sudachi)
-
-#### Applications via home-manager
-| Package | Home Manager | Category |
-|---------|--------------|----------|
-| ghostty | programs.ghostty | Terminal |
-
-#### Applications via Homebrew Casks
-| Package | Category |
-|---------|----------|
-| prismlauncher | Minecraft |
-| intellij-idea-ce | IDE |
-
-**注**: NixOSではnixpkgsの`jetbrains.idea-community`を使用し、macOSのHomebrew cask名は`intellij-idea-ce`。
 
 ---
 
@@ -533,8 +509,6 @@ sudo sbctl create-keys
 sudo sbctl enroll-keys --microsoft
 sudo sbctl verify
 
-# macOS rebuild (Sudachi)
-darwin-rebuild switch --flake .#Sudachi
 
 # Lint and check
 nix flake check
@@ -611,38 +585,6 @@ echo "VM built! Run result/bin/run-Citrus-vm to start"
 }
 ```
 
-### 8.3 Sudachi (macOS)
-
-```nix
-{ pkgs, ... }:
-{
-  # ホスト名設定
-  networking.hostName = "Sudachi";
-  
-  # Homebrew Casks
-  homebrew = {
-    enable = true;
-    casks = [
-      "prismlauncher"
-      "intellij-idea-ce"
-    ];
-  };
-  
-  # nix-darwin固有設定
-  system.stateVersion = 5;
-}
-```
-
-**Home Manager (Sudachi):**
-```nix
-{ pkgs, ... }:
-{
-  programs.ghostty.enable = true;
-  
-  # CLIツールは共通モジュールで管理
-}
-```
-
 ---
 
 ## 9. Implementation Checklist
@@ -669,13 +611,8 @@ echo "VM built! Run result/bin/run-Citrus-vm to start"
 - [ ] modules/nixos/fcitx5.nix
 - [ ] modules/nixos/secure-boot.nix
 
-### Phase 4: macOS Modules
-- [ ] modules/darwin/default.nix
-- [ ] modules/darwin/homebrew.nix
-
-### Phase 5: Host Configurations
+### Phase 4: Host Configurations
 - [ ] hosts/Citrus/default.nix (NixOS)
-- [ ] hosts/Sudachi/default.nix (macOS)
 - [ ] hosts/Citrus/hardware-configuration.nix
 
 ### Phase 6: Configuration Files
@@ -694,9 +631,8 @@ echo "VM built! Run result/bin/run-Citrus-vm to start"
 - [ ] Configure sops-nix encryption
 - [ ] Set up Secure Boot keys for Citrus (lanzaboote)
 
-### Phase 9: Testing & Validation
+### Phase 8: Testing & Validation
 - [ ] Test NixOS (Citrus) build
-- [ ] Test macOS (Sudachi) build
 - [ ] Test NixOS VM with GitHub Actions
 - [ ] Verify sops-nix encryption/decryption
 - [ ] Verify all home-manager programs
@@ -708,7 +644,7 @@ echo "VM built! Run result/bin/run-Citrus-vm to start"
 
 ### Initial Setup
 
-#### 1. Install NixOS / macOS Base System
+#### 1. Install NixOS Base System
 
 #### 2. Clone Repository
 ```bash
@@ -762,9 +698,6 @@ sudo sbctl verify
 ```bash
 # For Citrus (NixOS)
 sudo nixos-rebuild switch --flake .#Citrus
-
-# For Sudachi (macOS)
-darwin-rebuild switch --flake .#Sudachi
 ```
 
 ### Daily Usage
@@ -910,43 +843,10 @@ jobs:
   
 ```
 
-### `.github/workflows/build-darwin.yml` - macOS Build Check
-```yaml
-name: Build macOS Configuration
-
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
-
-jobs:
-  build-sudachi:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install Nix
-        uses: cachix/install-nix-action@v26
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v14
-        with:
-          name: nix-community
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-      
-      - name: Build Sudachi Configuration
-        run: |
-          nix build .#darwinConfigurations.Sudachi.system
-```
-
 ### CI/CD Features
 - ✅ Automatic flake validation on push/PR
 - ✅ Format checking with `nix fmt`
 - ✅ NixOS VM boot testing
-- ✅ macOS configuration build testing (on macOS runner)
 - ✅ Cachix integration for faster builds
 - ✅ Parallel job execution for each host
 
@@ -998,7 +898,6 @@ DankMaterialShellはniriのstatusバーとして機能します:
 
 ### Host Naming Convention
 - **Citrus**: シトラス - NixOS Native (フルデスクトップ環境)
-- **Sudachi**: スダチ - macOS (日本の柑橘類で統一)
 
 ### CI/CD Architecture
 ```
@@ -1017,9 +916,6 @@ GitHub Push/PR
 └───────────────────────────────────┘
     ↓
 ┌───────────────────────────────────┐
-│  macOS Build (macOS runner)       │
-│  - Build Sudachi config           │
-└───────────────────────────────────┘
 ```
 
 ## 13. Future Enhancements (Optional)
@@ -1058,14 +954,14 @@ GitHub Push/PR
 2. ❌ GPG for sops → ✅ Age for sops (simpler, no keyserver needed)
 3. ❌ `graalvm-oracle` → ✅ `graalvm-ce` (licensing)
 4. ❌ Mixed system/home packages → ✅ Prioritize home-manager modules
-5. ❌ hostname auto-detection → ✅ Explicit host names (Citrus/Sudachi)
+5. ❌ hostname auto-detection → ✅ Explicit host names (Citrus)
 6. ❌ `nixpkgs-fmt` → ✅ `nix fmt` (built-in)
 7. ❌ Manual testing → ✅ GitHub Actions CI/CD + VM tests
 
 ### Added
 - ✅ Complete home-manager integration for 16 packages
 - ✅ Age-based secret management
-- ✅ GitHub Actions workflows (check, VM test, macOS build)
+- ✅ GitHub Actions workflows (check, VM test)
 - ✅ Comprehensive troubleshooting guide
 - ✅ VM testing with KVM
 - ✅ Justfile commands for common operations
@@ -1076,7 +972,6 @@ GitHub Push/PR
 - ✅ Python environment: Removed yt-dlp duplication
 - ✅ DankMaterialShell: Clear integration instructions
 - ✅ Justfile: Added age key init, improved host detection
-- ✅ macOS: ghostty via home-manager instead of Homebrew
 
 ---
 

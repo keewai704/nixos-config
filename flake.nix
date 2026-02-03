@@ -9,10 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-darwin = {
-      url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     dankmaterialshell = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
@@ -42,7 +38,7 @@
     let
       vars = import ./vars/default.nix;
       lib = import ./lib { inherit inputs vars; };
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      systems = [ "x86_64-linux" ];
       forAllSystems = f:
         builtins.listToAttrs (map
           (system: {
@@ -56,9 +52,6 @@
         Citrus = lib.mkNixosSystem { host = "Citrus"; };
       };
 
-      darwinConfigurations = {
-        Sudachi = lib.mkDarwinSystem { host = "Sudachi"; };
-      };
 
       formatter = forAllSystems (
         system:

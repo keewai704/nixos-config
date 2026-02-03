@@ -11,7 +11,6 @@
 This repo manages three hosts with a single flake:
 
 - **Citrus** (NixOS)
-- **Sudachi** (macOS, nix-darwin)
 
 Key paths:
 
@@ -21,7 +20,6 @@ Key paths:
 - `hosts/<host>/default.nix`: host-specific config
 - `home/takahiro/*`: Home Manager modules
 - `modules/nixos/*`: NixOS modules (wayland, fcitx5, niri, secure-boot)
-- `modules/darwin/default.nix`: Darwin base settings
 - `overlays/default.nix`: custom overlays (HackGen font)
 - `.github/workflows/*`: CI workflows
 
@@ -113,7 +111,6 @@ Workflows:
 
 - `check.yml`: `nix flake check` + `nix fmt -- --check .`
 - `test-vm.yml`: Citrus VM build
-- `build-darwin.yml`: macOS build for Sudachi
 - `flake-maintenance.yml`: weekly lock + home.stateVersion update
 
 Manual triggers are enabled via `workflow_dispatch`.
@@ -129,7 +126,7 @@ Formatting:
 Validation:
 
 - `nix flake check` for general verification.
-- Use `sudo nixos-rebuild switch --flake .#<host>` or `darwin-rebuild switch --flake .#<host>` for host builds.
+- Use `sudo nixos-rebuild switch --flake .#<host>` for host builds.
 
 ---
 
