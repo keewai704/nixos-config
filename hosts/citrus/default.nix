@@ -1,4 +1,13 @@
-{ inputs, vars, pkgs, ... }:
+{ config, inputs, vars, pkgs, ... }:
+let
+  initrdModulesRoot = pkgs.runCommand "initrd-modules-root" { } ''
+    mkdir -p $out
+    ln -s ${config.system.build.modulesClosure}/lib/modules $out/modules
+    if [ -d ${config.system.build.modulesClosure}/lib/firmware ]; then
+      ln -s ${config.system.build.modulesClosure}/lib/firmware $out/firmware
+    fi
+  '';
+in
 {
   imports = [
     ../common/default.nix
@@ -14,7 +23,14 @@
     ../common/nix-ld.nix
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_xanmod;
+  boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+  boot.initrd.systemd.suppressedStorePaths = [ "${config.system.build.modulesClosure}/lib" ];
+  boot.initrd.systemd.storePaths = [
+    {
+      source = initrdModulesRoot;
+      target = "/lib";
+    }
+  ];
 
   networking.hostName = "Citrus";
 
