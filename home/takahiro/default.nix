@@ -5,11 +5,6 @@
     ./programs/git.nix
     ./programs/cli-tools.nix
     ./programs/dev-tools.nix
-    inputs.dankmaterialshell.homeModules.dank-material-shell
-    inputs.dankmaterialshell.homeModules.niri
-    ./programs/dank-material-shell.nix
-    ./programs/danksearch.nix
-    ./programs/dgop.nix
   ];
 
   home.username = vars.user;
