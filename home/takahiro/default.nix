@@ -1,10 +1,13 @@
 { pkgs, vars, inputs, lib, ... }:
 {
   imports = [
+    ./programs/apps.nix
+    ./programs/browsers.nix
     ./programs/zsh.nix
     ./programs/git.nix
     ./programs/cli-tools.nix
     ./programs/dev-tools.nix
+    ./programs/playwright-cli.nix
   ];
 
   home.username = vars.user;
