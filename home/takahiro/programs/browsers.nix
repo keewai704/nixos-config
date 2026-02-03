@@ -30,7 +30,6 @@ in
         bitwarden
         decentraleyes
         tampermonkey
-        photoshow
         darkreader
       ];
     };
