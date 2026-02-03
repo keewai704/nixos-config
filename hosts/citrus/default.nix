@@ -24,6 +24,7 @@ in
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
+  boot.initrd.systemd.enable = true;
   boot.initrd.systemd.contents."/lib".source = lib.mkForce initrdModulesRoot;
 
   networking.hostName = "Citrus";
