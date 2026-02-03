@@ -109,7 +109,7 @@
 
       git_status = {
         style = "fg:red";
-        format = "[[$ahead$behind$staged$modified$untracked$deleted]($style)]";
+        format = "[[\${ahead}\${behind}\${staged}\${modified}\${untracked}\${deleted}]($style)]";
         ahead = "↑";
         behind = "↓";
         staged = "●";
@@ -121,25 +121,25 @@
       nodejs = {
         style = "fg:green";
         symbol = "JS ";
-        format = "[${symbol}${version}]($style)";
+        format = "[\${symbol}\${version}]($style)";
       };
 
       python = {
         style = "fg:yellow";
         symbol = "PY ";
-        format = "[${symbol}${version}]($style)";
+        format = "[\${symbol}\${version}]($style)";
       };
 
       rust = {
         style = "fg:red";
         symbol = "RS ";
-        format = "[${symbol}${version}]($style)";
+        format = "[\${symbol}\${version}]($style)";
       };
 
       golang = {
         style = "fg:cyan";
         symbol = "GO ";
-        format = "[${symbol}${version}]($style)";
+        format = "[\${symbol}\${version}]($style)";
       };
 
       status = {
