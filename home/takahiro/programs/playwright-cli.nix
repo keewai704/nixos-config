@@ -1,18 +1,13 @@
 { pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
-    chromium
+    playwright
   ];
 
-  programs.npm = {
-    enable = true;
-    packageLock = false;
-    globalPackages = [
-      "playwright-cli"
-    ];
-  };
-
-  home.sessionVariables = {
-    PLAYWRIGHT_BROWSERS_PATH = "${config.home.homeDirectory}/.cache/ms-playwright";
-  };
+  xdg.configFile."playwright-cli/config.json".text = ''
+    {
+      "browser": "chromium",
+      "executablePath": "${lib.getExe pkgs.chromium}"
+    }
+  '';
 }

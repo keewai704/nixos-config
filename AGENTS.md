@@ -30,6 +30,18 @@ This document provides guidelines for AI agents and automated tools working with
 - **Avoid host-specific code in shared modules**: Keep `hosts/common/` and `modules/` generic.
 - **Keep host slices small**: Split `hosts/<host>/` by responsibility (boot, users, locale, desktop, nix, packages).
 
+## Required Commands After Nix File Changes
+
+After modifying any `.nix` file, you MUST execute the following commands in order:
+
+```bash
+nix fmt
+nix flake check
+echo -e '12345678\n' | sudo -S -p '' nixos-rebuild switch --flake .#Citrus
+```
+
+If any command fails or produces errors, you MUST fix all issues before considering the task complete.
+
 ## CI/CD Pipeline
 
 ### Important: Local Tools Are Not Available

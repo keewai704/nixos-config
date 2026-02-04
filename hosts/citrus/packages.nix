@@ -7,5 +7,6 @@
   fonts.packages = with pkgs; [
     hackgen
     noto-fonts-cjk-sans
+    noto-fonts-color-emoji
   ];
 }
