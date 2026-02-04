@@ -1,17 +1,11 @@
 { pkgs, vars, inputs, lib, ... }:
 {
   imports = [
-    ./programs/apps.nix
-    ./programs/browsers.nix
-    ./programs/zsh.nix
-    ./programs/git.nix
-    ./programs/cli-tools.nix
-    ./programs/dev-tools.nix
-    ./programs/playwright-cli.nix
+    ./programs/default.nix
   ];
 
   home.username = vars.user;
-  home.homeDirectory = "/home/${vars.user}";
+  home.homeDirectory = vars.homeDirectory;
   home.stateVersion = "26.05";
 
   xdg.enable = true;

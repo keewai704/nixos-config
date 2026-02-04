@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, pkgs, ... }:
 {
   programs.dank-material-shell = {
     enable = true;
@@ -6,11 +6,16 @@
       enable = true;
       restartIfChanged = true;
     };
+    systemd.target = "graphical-session.target";
+    dgop.package = pkgs.dgop;
     enableSystemMonitoring = true;
     enableVPN = true;
     enableDynamicTheming = true;
     enableAudioWavelength = true;
     enableCalendarEvents = true;
+    enableClipboardPaste = true;
+    quickshell.package = inputs.dankmaterialshell.packages.${pkgs.system}.quickshell;
+    plugins = { };
   };
 
   services.displayManager.dms-greeter = {

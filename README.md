@@ -31,6 +31,21 @@ sudo nixos-generate-config --show-hardware-config > hosts/citrus/hardware-config
 sudo nixos-rebuild switch --flake .#Citrus
 ```
 
+## ユーザーをimmutableにしてパスワード設定
+ユーザーを宣言的に管理する場合は `users.mutableUsers = false;` を有効化し、
+`users.users.<name>.hashedPassword` にハッシュを指定します。
+
+```bash
+mkpasswd -m sha-512
+```
+
+```nix
+users.mutableUsers = false;
+users.users.<name>.hashedPassword = "<hash>";
+```
+
+`mkpasswd` が使えない場合は `openssl passwd -6` でも生成できます。
+
 ## Secure Boot (初回のみ)
 Secure Boot を使う場合は `hosts/citrus/default.nix` で
 `modules/nixos/secure-boot.nix` を有効化してから以下を実行します。

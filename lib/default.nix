@@ -7,11 +7,6 @@ in
     let
       hostConfig = vars.hosts.${host};
       system = hostConfig.system;
-      pkgs = import inputs.nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [ (import ../overlays { inherit inputs; }) ];
-      };
     in
     lib.nixosSystem {
       inherit system;

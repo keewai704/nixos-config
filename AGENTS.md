@@ -13,12 +13,12 @@ This document provides guidelines for AI agents and automated tools working with
 | `vars/default.nix` | User and host metadata (username, git config) |
 | `lib/default.nix` | System constructors (`mkNixosSystem` helper) |
 | `hosts/<host>/default.nix` | Host-specific configuration |
+| `hosts/<host>/system.nix` | Core host settings (boot, locale, users, packages, nix) |
 | `hosts/common/*.nix` | Shared host-level configuration |
 | `hosts/<host>/*.nix` | Host-specific slices (boot, locale, users, etc.) |
 | `modules/nixos/*.nix` | Reusable NixOS modules |
 | `home/<user>/default.nix` | Home Manager entry point |
-| `home/<user>/programs/*.nix` | Home Manager modules organized by responsibility |
-| `overlays/default.nix` | Package overlays |
+| `home/<user>/programs/default.nix` | Home Manager program configuration |
 | `secrets/` | Secret examples (never commit `*.yaml`, only `*.example`) |
 
 ## Rules

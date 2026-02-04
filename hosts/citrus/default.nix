@@ -11,13 +11,9 @@
     ../../modules/nixos/fcitx5.nix
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/pipewire.nix
-    ./boot.nix
-    ./locale.nix
-    ./users.nix
+    ./system.nix
     ./desktop.nix
     ./home-manager.nix
-    ./packages.nix
-    ./nix.nix
   ];
 
   networking.hostName = "Citrus";

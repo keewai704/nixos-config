@@ -1,5 +1,6 @@
 {
   user = "takahiro";
+  homeDirectory = "/home/takahiro";
   gitUsername = "Lupo409";
   gitEmail = "249657796+lupo409@users.noreply.github.com";
 
