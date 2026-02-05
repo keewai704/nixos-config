@@ -3,19 +3,6 @@ let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   ublockFilters = lib.splitString "\n" (builtins.readFile ./ublock/jpf-plus.txt);
   dmsWeatherCoordinates = "__DMS_WEATHER_COORDINATES__";
-  photoshow = addons.buildFirefoxXpiAddon {
-    pname = "photoshow";
-    version = "4.86.1";
-    addonId = "photoshow";
-    url = "https://addons.mozilla.org/firefox/downloads/file/4672520/photoshow-4.86.1.xpi";
-    sha256 = "sha256-zXdkl2xx4398mQeorT6eX8qC4E7N1UVFYTPzXog6T5Q=";
-    meta = with lib; {
-      homepage = "https://addons.mozilla.org/firefox/addon/photoshow/";
-      description = "PhotoShow";
-      license = licenses.unfreeRedistributable;
-      platforms = platforms.all;
-    };
-  };
   chromiumExec = lib.getExe pkgs.chromium;
   firefoxToolbarState = builtins.toJSON {
     placements = {
@@ -210,7 +197,6 @@ in
           addons.tampermonkey
           addons.darkreader
           addons.ublock-origin
-          photoshow
         ];
         extensions.settings = {
           "ublock0@raymondhill.net" = {
