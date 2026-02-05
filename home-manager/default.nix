@@ -4,5 +4,6 @@
     ./home.nix
     ./packages.nix
     ./programs.nix
+    ./cursors.nix
   ];
 }

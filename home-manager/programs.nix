@@ -1,6 +1,8 @@
 { config, lib, pkgs, vars, ... }:
 let
   addons = pkgs.nur.repos.rycee.firefox-addons;
+  ublockFilters = lib.splitString "\n" (builtins.readFile ./ublock/jpf-plus.txt);
+  dmsWeatherCoordinates = "__DMS_WEATHER_COORDINATES__";
   photoshow = addons.buildFirefoxXpiAddon {
     pname = "photoshow";
     version = "4.86.1";
@@ -10,7 +12,7 @@ let
     meta = with lib; {
       homepage = "https://addons.mozilla.org/firefox/addon/photoshow/";
       description = "PhotoShow";
-      license = licenses.mpl20;
+      license = licenses.unfreeRedistributable;
       platforms = platforms.all;
     };
   };
@@ -27,14 +29,14 @@ let
         "unified-extensions-button"
       ];
       "toolbar-menubar" = [ "menubar-items" ];
-      "TabsToolbar" = [ "tabbrowser-tabs" "new-tab-button" "alltabs-button" ];
+      "TabsToolbar" = [ "tabbrowser-tabs" "alltabs-button" ];
       "PersonalToolbar" = [ "personal-bookmarks" ];
       "unified-extensions-area" = [ ];
     };
     seen = [
+      "unified-extensions-button"
       "ublock0@raymondhill.net"
       "downloads-button"
-      "unified-extensions-button"
     ];
     dirtyAreaCache = [ "nav-bar" "TabsToolbar" "PersonalToolbar" "toolbar-menubar" ];
     currentVersion = 20;
@@ -107,12 +109,20 @@ in
           "extensions.htmlaboutaddons.recommendations.enabled" = false;
           "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false;
           "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
+          "browser.newtabpage.activity-stream.telemetry" = false;
+          "browser.newtabpage.activity-stream.section.highlights" = false;
+          "browser.newtabpage.activity-stream.section.highlights.includeBookmarks" = false;
+          "browser.newtabpage.activity-stream.section.highlights.includeDownloads" = false;
+          "browser.newtabpage.activity-stream.section.highlights.includeVisited" = false;
+          "browser.newtabpage.activity-stream.feeds.section.highlights" = false;
+          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.newtabpage.activity-stream.section.topstories" = false;
           "privacy.trackingprotection.enabled" = false;
           "privacy.trackingprotection.pbmode.enabled" = false;
           "privacy.trackingprotection.fingerprinting.enabled" = false;
           "privacy.trackingprotection.cryptomining.enabled" = false;
           "privacy.trackingprotection.socialtracking.enabled" = false;
-          "privacy.globalprivacycontrol.enabled" = true;
+          "privacy.globalprivacycontrol.enabled" = false;
           "signon.rememberSignons" = false;
           "extensions.formautofill.creditCards.enabled" = false;
           "extensions.formautofill.addresses.enabled" = false;
@@ -132,17 +142,35 @@ in
           "toolkit.telemetry.unified" = false;
           "toolkit.telemetry.prompted" = false;
           "toolkit.telemetry.autoOpts" = false;
+          "toolkit.telemetry.server" = "";
           "datareporting.healthreport.enabled" = false;
           "datareporting.healthreport.uploadEnabled" = false;
           "datareporting.policy.dataSubmissionEnabled" = false;
           "datareporting.policy.fourDayNotificationShown" = false;
           "datareporting.policy.dataSubmissionPolicyBypassNotification" = true;
+          "browser.ping-centre.telemetry" = false;
+          "browser.newtabpage.activity-stream.feeds.telemetry" = false;
+          "browser.newtabpage.activity-stream.feeds.system.topstories" = false;
+          "browser.newtabpage.activity-stream.feeds.topsites" = false;
+          "browser.newtabpage.activity-stream.feeds.snippets" = false;
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
           "browser.contentblocking.category" = "custom";
           "privacy.trackingprotection.smartblock.enabled" = false;
           "privacy.socialtracking.block_cookies.enabled" = false;
+          "places.history.enabled" = false;
+          "browser.urlbar.suggest.history" = false;
+          "browser.urlbar.suggest.bookmark" = false;
+          "browser.urlbar.suggest.remotetab" = false;
+          "browser.urlbar.shortcuts.history" = false;
+          "browser.urlbar.shortcuts.bookmarks" = false;
+          "browser.urlbar.shortcuts.tabs" = false;
+          "browser.urlbar.suggest.openpage" = false;
+          "browser.urlbar.suggest.topsites" = false;
           "network.trr.mode" = 0;
           "network.trr.uri" = "";
           "network.dns.disablePrefetchFromHTTPS" = true;
+          "network.trr.confirmationNS" = "";
           "browser.safebrowsing.downloads.enabled" = false;
           "browser.safebrowsing.malware.enabled" = false;
           "browser.safebrowsing.phishing.enabled" = false;
@@ -155,11 +183,55 @@ in
           "app.normandy.runIntervalSeconds" = 100000000;
           "messaging-system.rsexperimentWAA" = false;
           "messaging-system.rwaaOrders" = false;
+          "browser.ml.chat.enabled" = false;
+          "browser.ml.chat.sidebar" = false;
+          "browser.ml.chat.menu" = false;
+          "browser.ml.chat.page" = false;
+          "browser.ml.chat.page.footerBadge" = false;
+          "browser.ml.chat.page.menuBadge" = false;
+          "browser.ml.chat.shortcuts" = false;
+          "browser.ml.chat.shortcuts.custom" = false;
+          "sidebar.notification.badge.aichat" = false;
+          "sidebar.main.tools" = "";
+          "browser.contextual-password-manager.enabled" = false;
+          "services.sync.engine.tabs" = false;
+          "services.sync.engine.history" = false;
+          "services.sync.engine.passwords" = false;
+          "services.sync.engine.bookmarks" = false;
+          "services.sync.engine.addresses" = false;
+          "services.sync.engine.creditcards" = false;
+          "sidebar.visibility" = "expand-on-hover";
+          "sidebar.expandOnHover" = true;
         };
         extensions.packages = [
+          addons.bonjourr-startpage
+          addons.decentraleyes
+          addons.bitwarden
+          addons.tampermonkey
+          addons.darkreader
           addons.ublock-origin
           photoshow
         ];
+        extensions.settings = {
+          "ublock0@raymondhill.net" = {
+            force = true;
+            settings = {
+              toAdd = {
+                filterLists = [
+                  "adguard-spyware-url"
+                  "fanboy-cookiemonster"
+                  "easylist-annoyances"
+                  "ublock-annoyances"
+                ];
+                filters = [
+                  "! https://github.com/Yuki2718/adblock2/raw/refs/heads/main/japanese/jpf-plus.txt"
+                  "! This file is managed by Nix: home-manager/programs.nix"
+                ] ++ ublockFilters;
+              };
+            };
+          };
+        };
+        extensions.force = true;
       };
     };
 
@@ -353,17 +425,68 @@ in
     };
   };
 
-  xdg.configFile."agent-browser/config.json".text = ''
-    {
-      "browser": "chromium",
-      "executablePath": "${lib.getExe pkgs.chromium}"
-    }
-  '';
-
   xdg.configFile."ghostty/config" = {
     text = ''
-      font-family = "Hack Nerd Font"
+      font-family = "HackGen Console NF"
+      font-size = 12
+      theme = "Gruvbox Dark"
+      scrollback-limit = 10000
+      cursor-style = "block"
+      cursor-blink = true
+      window-padding-x = 8
+      window-padding-y = 8
+      confirm-close-surface = false
     '';
+    force = true;
+  };
+
+  xdg.configFile."DankMaterialShell/settings.json" = {
+    source = ./dms/settings.json;
+    force = true;
+  };
+
+  xdg.configFile."niri/config.kdl" = {
+    source = ./niri-config.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/binds.kdl" = {
+    source = ./dms/binds.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/layout.kdl" = {
+    source = ./dms/layout.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/outputs.kdl" = {
+    source = ./dms/outputs.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/colors.kdl" = {
+    source = ./dms/colors.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/alttab.kdl" = {
+    source = ./dms/alttab.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/cursor.kdl" = {
+    source = ./dms/cursor.kdl;
+    force = true;
+  };
+
+  xdg.configFile."niri/dms/wpblur.kdl" = {
+    source = ./dms/wpblur.kdl;
+    force = true;
+  };
+
+  xdg.configFile."DankMaterialShell/firefox.css" = {
+    source = ./dms/firefox.css;
     force = true;
   };
 

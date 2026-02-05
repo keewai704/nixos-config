@@ -1,84 +1,82 @@
-{ lib, pkgs, ... }:
+{ config, lib, ... }:
 {
+  sops.secrets."network/ap0_psk" = { };
+  sops.templates.networkmanager_env = {
+    path = "/run/secrets/network-manager.env";
+    owner = "root";
+    group = "root";
+    mode = "0400";
+    content = ''
+      AP0_PSK=${config.sops.placeholder."network/ap0_psk"}
+    '';
+  };
+
   hardware.wirelessRegulatoryDatabase = true;
 
-  boot.kernelParams = [ "net.ifnames=0" "biosdevname=0" ];
-
   networking = {
+    usePredictableInterfaceNames = false;
+
+    firewall = {
+      trustedInterfaces = [ "ap0" ];
+      allowedUDPPorts = [ 53 67 68 ];
+    };
+
     networkmanager = {
       enable = true;
-      ensureProfiles.profiles = {
-        br0 = {
-          connection = {
-            id = "br0";
-            type = "bridge";
-            interface-name = "br0";
-            autoconnect = true;
+      wifi = {
+        backend = "wpa_supplicant";
+        scanRandMacAddress = false;
+        macAddress = "permanent";
+      };
+      ensureProfiles = {
+        environmentFiles = [ config.sops.templates.networkmanager_env.path ];
+        profiles = {
+          eth0 = {
+            connection = {
+              id = "eth0_conf";
+              type = "ethernet";
+              interface-name = "eth0";
+            };
+            ethernet = { };
+            ipv4 = {
+              method = "auto";
+            };
+            ipv6 = {
+              addr-gen-mode = "default";
+              method = "auto";
+            };
+            proxy = { };
           };
-          bridge = {
-            stp = false;
-          };
-          ipv4 = {
-            method = "auto";
-          };
-          ipv6 = {
-            method = "ignore";
-          };
-        };
-
-        eth0 = {
-          connection = {
-            id = "eth0";
-            type = "ethernet";
-            interface-name = "eth0";
-            master = "br0";
-            slave-type = "bridge";
-            autoconnect = true;
-          };
-          ethernet = { };
-        };
-
-        ap0 = {
-          connection = {
-            id = "ap0";
-            type = "wifi";
-            interface-name = "ap0";
-            master = "br0";
-            slave-type = "bridge";
-            autoconnect = true;
-          };
-          wifi = {
-            mode = "ap";
-            ssid = "Citrus-AX";
-            band = "a";
-            channel = 36;
-            powersave = 2;
-          };
-          ipv4 = {
-            method = "disabled";
-          };
-          ipv6 = {
-            method = "ignore";
+          ap0 = {
+            connection = {
+              id = "ap0";
+              type = "802-11-wireless";
+              interface-name = "wlan0";
+              autoconnect = true;
+            };
+            wifi = {
+              mode = "ap";
+              ssid = "Citrus-AX";
+              band = "a";
+              channel = 36;
+              powersave = 2;
+            };
+            wifi-security = {
+              key-mgmt = "wpa-psk";
+              psk = "$AP0_PSK";
+            };
+            ipv4 = {
+              method = "shared";
+            };
+            ipv6 = {
+              method = "ignore";
+            };
           };
         };
       };
     };
 
-    wireless.enable = lib.mkForce false;
-    usePredictableInterfaceNames = false;
   };
 
-  systemd.services.nm-ap0-setup = {
-    description = "Create ap0 interface for NetworkManager";
-    after = [ "network-pre.target" ];
-    wants = [ "network-pre.target" ];
-    before = [ "NetworkManager.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.iw}/bin/iw dev wlan0 interface add ap0 type __ap";
-      ExecStop = "${pkgs.iw}/bin/iw dev ap0 del";
-    };
-  };
+  systemd.services."NetworkManager-wait-online".enable = false;
 }

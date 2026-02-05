@@ -12,6 +12,7 @@
 
     secrets."github/token".owner = vars.username;
     secrets."tailscale/authkey".owner = vars.username;
+    secrets."dms/weather_coordinates" = { };
   };
 
   environment.systemPackages = with pkgs; [

@@ -29,3 +29,4 @@ secrets/*.yaml
 .bun
 .cache
 server/
+.grepai/

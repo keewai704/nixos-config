@@ -31,6 +31,7 @@ in
     isNormalUser = true;
     home = vars.homeDirectory;
     extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
   };
 
   security.sudo = {
@@ -46,13 +47,20 @@ in
 
   programs.zsh.enable = true;
 
+  services.udev.extraRules = ''
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3554", ATTRS{idProduct}=="f5f7", TAG+="uaccess"
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1ca6", ATTRS{idProduct}=="3002", TAG+="uaccess"
+  '';
+
+
   environment.systemPackages = with pkgs; [
     dgop
     papirus-icon-theme
   ];
 
   fonts.packages = with pkgs; [
-    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.hackgen
+    hackgen-font
+    hackgen-nf-font
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
@@ -63,7 +71,7 @@ in
     defaultFonts = {
       sansSerif = [ "Noto Sans CJK JP" "Noto Sans CJK" ];
       serif = [ "Noto Serif CJK JP" "Noto Serif CJK" ];
-      monospace = [ "Hack Nerd Font" "HackGen Console" "HackGen" ];
+      monospace = [ "HackGen Console NF" "HackGen Console" "HackGen" ];
       emoji = [ "Noto Color Emoji" ];
     };
   };

@@ -2,6 +2,7 @@
 let
   vars = import ../vars/default.nix;
   lib = import ../lib { inherit inputs vars; };
+  pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
   systems = [ "x86_64-linux" ];
   forAllSystems = f:
     builtins.listToAttrs (map
@@ -13,11 +14,7 @@ let
 in
 {
   nixosConfigurations = import ./nixos-configurations.nix { inherit lib; };
-  packages = import ./packages.nix {
-    inherit forAllSystems;
-    hackgen = inputs.hackgen;
-    nixpkgs = inputs.nixpkgs;
-  };
+  packages = forAllSystems (system: { });
   formatter = import ./formatter.nix {
     inherit forAllSystems;
     nixpkgs = inputs.nixpkgs;

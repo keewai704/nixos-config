@@ -88,6 +88,38 @@ sudo cp secrets/secrets.yaml.example /etc/nixos/secrets.yaml
 sudo sops --encrypt --in-place /etc/nixos/secrets.yaml
 ```
 
+### 新規マシンのセットアップ手順
+1. **鍵の作成**
+   ```bash
+   sudo mkdir -p /etc/sops/age
+   sudo age-keygen -o /etc/sops/age/keys.txt
+   export SOPS_AGE_KEY_FILE=/etc/sops/age/keys.txt
+   ```
+
+2. **例ファイルの配置 → 暗号化**
+   ```bash
+   sudo cp secrets/secrets.yaml.example /etc/nixos/secrets.yaml
+   sudo sops --encrypt --in-place /etc/nixos/secrets.yaml
+   ```
+
+3. **必要項目を入力**
+   ```bash
+   sops /etc/nixos/secrets.yaml
+   ```
+
+4. **DMS の天気ロケーション（緯度経度）**
+   `dms.weather_coordinates` に `lat,lon` 形式で設定します。
+   ```yaml
+   dms:
+     weather_coordinates: "35.681236,139.767125"
+   ```
+   例: 東京駅付近
+
+5. **適用**
+   ```bash
+   sudo nixos-rebuild switch --flake .#Citrus
+   ```
+
 既に `/etc/nixos/secrets.yaml` が平文の場合は、いったん削除して作り直してください。
 
 ### 使い方
@@ -105,6 +137,13 @@ sudo sops --encrypt --in-place /etc/nixos/secrets.yaml
 # 必要な値だけ上書き
 sops --decrypt /etc/nixos/secrets.yaml | \
   jq '.github.token="<token>" | .tailscale.authkey="<authkey>"' | \
+  sudo sops --encrypt --output /etc/nixos/secrets.yaml /dev/stdin
+```
+
+#### DMS 天気の座標を更新する
+```bash
+sops --decrypt /etc/nixos/secrets.yaml | \
+  jq '.dms.weather_coordinates="35.681236,139.767125"' | \
   sudo sops --encrypt --output /etc/nixos/secrets.yaml /dev/stdin
 ```
 
