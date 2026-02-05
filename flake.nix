@@ -1,11 +1,6 @@
 {
   description = "NixOS multi-platform configuration";
 
-  nixConfig = {
-    extra-substituters = [ "https://cache.numtide.com" ];
-    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
-  };
-
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -38,54 +33,12 @@
       flake = false;
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }:
-    let
-      vars = import ./vars/default.nix;
-      lib = import ./lib { inherit inputs vars; };
-      systems = [ "x86_64-linux" ];
-      forAllSystems = f:
-        builtins.listToAttrs (map
-          (system: {
-            name = system;
-            value = f system;
-          })
-          systems);
-    in
-    {
-      nixosConfigurations = {
-        Citrus = lib.mkNixosSystem { host = "Citrus"; };
-      };
-
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = import nixpkgs { inherit system; };
-        in
-        {
-          hackgen = pkgs.stdenvNoCC.mkDerivation {
-            pname = "hackgen";
-            version = "unstable";
-            src = inputs.hackgen;
-            nativeBuildInputs = [ pkgs.findutils ];
-            installPhase = ''
-              runHook preInstall
-              mkdir -p $out/share/fonts/truetype
-              find . -type f -name "*.ttf" -exec cp -v {} $out/share/fonts/truetype/ \;
-              runHook postInstall
-            '';
-          };
-        }
-      );
-
-
-      formatter = forAllSystems (
-        system:
-        let
-          pkgs = import nixpkgs { inherit system; };
-        in
-        pkgs.nixpkgs-fmt
-      );
-    };
+  outputs = inputs: import ./flake/outputs.nix { inherit inputs; };
 }

@@ -31,7 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           RELEASE=$(curl -fsSL https://raw.githubusercontent.com/nix-community/home-manager/master/release.json | python3 -c 'import json,sys; print(json.load(sys.stdin)["release"])')
-          FILE="home/takahiro/default.nix"
+          FILE="home-manager/default.nix"
           perl -0777 -i -pe "s/home.stateVersion = \"[0-9.]+\";/home.stateVersion = \"${RELEASE}\";/" "$FILE"
 
       - name: Check flake after updates
@@ -46,7 +46,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add flake.lock home/takahiro/default.nix
+          git add flake.lock home-manager/default.nix
           git commit -m "chore: update flake lock and home-manager state"
 
       - name: Push changes

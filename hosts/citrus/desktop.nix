@@ -14,7 +14,7 @@
     enableAudioWavelength = true;
     enableCalendarEvents = true;
     enableClipboardPaste = true;
-    quickshell.package = inputs.dankmaterialshell.packages.${pkgs.system}.quickshell;
+    quickshell.package = inputs.dankmaterialshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
     plugins = { };
   };
 

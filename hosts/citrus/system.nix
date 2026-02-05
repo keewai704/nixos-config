@@ -20,20 +20,23 @@ in
   i18n.defaultLocale = "ja_JP.UTF-8";
   i18n.supportedLocales = [ "ja_JP.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.warn-dirty = false;
-  nix.settings.allow-dirty = true;
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [ vars.username ];
+    substituters = [ "https://cache.numtide.com" ];
+    trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
 
-  users.users.${vars.user} = {
+  users.users.${vars.username} = {
     isNormalUser = true;
     home = vars.homeDirectory;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" ];
   };
 
   security.sudo = {
     enable = true;
     extraRules = [{
-      users = [ vars.user ];
+      users = [ vars.username ];
       commands = [{
         command = "ALL";
         options = [ "NOPASSWD" ];
@@ -49,7 +52,7 @@ in
   ];
 
   fonts.packages = with pkgs; [
-    inputs.self.packages.${pkgs.system}.hackgen
+    inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.hackgen
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
@@ -60,7 +63,7 @@ in
     defaultFonts = {
       sansSerif = [ "Noto Sans CJK JP" "Noto Sans CJK" ];
       serif = [ "Noto Serif CJK JP" "Noto Serif CJK" ];
-      monospace = [ "HackGen Console" "HackGen" ];
+      monospace = [ "Hack Nerd Font" "HackGen Console" "HackGen" ];
       emoji = [ "Noto Color Emoji" ];
     };
   };

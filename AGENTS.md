@@ -1,28 +1,22 @@
 # Agents Guide
 
 ## Scope
-
-This document provides guidelines for AI agents and automated tools working with this NixOS configuration repository.
+This document provides guidelines for AI agents and automated tools working with this NixOS configuration repository. All commands are intended to be executed on a NixOS host.
 
 ## Project Layout
-
 | Path | Description |
 |------|-------------|
-| `flake.nix` | Flake definition with inputs and outputs |
-| `flake.lock` | Locked flake dependencies |
-| `vars/default.nix` | User and host metadata (username, git config) |
-| `lib/default.nix` | System constructors (`mkNixosSystem` helper) |
-| `hosts/<host>/default.nix` | Host-specific configuration |
-| `hosts/<host>/system.nix` | Core host settings (boot, locale, users, packages, nix) |
-| `hosts/common/*.nix` | Shared host-level configuration |
-| `hosts/<host>/*.nix` | Host-specific slices (boot, locale, users, etc.) |
-| `modules/nixos/*.nix` | Reusable NixOS modules |
-| `home/<user>/default.nix` | Home Manager entry point |
-| `home/<user>/programs/default.nix` | Home Manager program configuration |
+| `flake.nix` | Flake entrypoint (delegates to `flake/`) |
+| `flake/` | Flake outputs split by responsibility |
+| `vars/default.nix` | Username and host metadata |
+| `lib/default.nix` | System constructors (`mkNixosSystem`) |
+| `hosts/<host>/` | Host-specific configuration (system/desktop) |
+| `hosts/common/` | Shared host-level configuration |
+| `modules/nixos/` | Reusable NixOS modules |
+| `home-manager/` | Home Manager entry (home/packages/programs) |
 | `secrets/` | Secret examples (never commit `*.yaml`, only `*.example`) |
 
 ## Rules
-
 - **One file = one responsibility**: Keep modules focused and cohesive.
 - **Prefer Home Manager**: Use Home Manager for user-level packages and configuration.
 - **Nix formatting**: Align code with `nix fmt` (uses `nixpkgs-fmt`).
@@ -31,25 +25,34 @@ This document provides guidelines for AI agents and automated tools working with
 - **Keep host slices small**: Split `hosts/<host>/` by responsibility (boot, users, locale, desktop, nix, packages).
 
 ## Required Commands After Nix File Changes
-
-After modifying any `.nix` file, you MUST execute the following commands in order:
+After modifying any `.nix` file on the NixOS host, execute the following commands every time:
 
 ```bash
 nix fmt
 nix flake check
-echo -e '12345678\n' | sudo -S -p '' nixos-rebuild switch --flake .#Citrus
 ```
 
-If any command fails or produces errors, you MUST fix all issues before considering the task complete.
+Before finishing your edits, confirm there are no errors by running:
 
-## CI/CD Pipeline
+```bash
+nix flake update
+sudo nixos-rebuild switch --flake .#Citrus
+```
 
-### Important: Local Tools Are Not Available
+If any command fails or produces errors, fix all issues and repeat the same checks.
 
-**`nix fmt` and similar Nix commands cannot be run locally in this environment.** All formatting and validation is performed automatically by GitHub Actions when changes are pushed.
+## Local Development & CI/CD Pipeline
+### Local Development (NixOS Native)
+Since running NixOS natively, all Nix tools are available locally:
+
+| Command | Purpose |
+|---------|---------|
+| `nix fmt` | Format code with nixpkgs-fmt |
+| `nix flake check` | Validate flake configuration |
+| `nix flake update` | Update flake.lock |
+| `sudo nixos-rebuild switch` | Apply configuration changes |
 
 ### GitHub Actions Workflows
-
 | Workflow | Trigger | Duration | Purpose |
 |----------|---------|----------|---------|
 | `check.yml` | Push to `main`/`develop`, PRs | ~2-5 min | Runs `nix flake check` and formatting validation |
@@ -57,71 +60,53 @@ If any command fails or produces errors, you MUST fix all issues before consider
 | `flake-maintenance.yml` | Weekly (Monday 3:00 UTC) | ~5 min | Auto-updates `flake.lock` |
 
 ### Workflow for Agents
+1. Run `nix fmt` and `nix flake check` after each `.nix` change
+2. Make the required configuration edits
+3. Before finishing, run `nix flake update` and `sudo nixos-rebuild switch --flake .#Citrus`
+4. Commit and push to the repository
+5. Wait for CI completion:
+   - For formatting/check: wait at least 5 minutes
+   - For VM tests: wait at least 15 minutes
+6. Verify workflow run status on GitHub
+7. Resolve all errors if CI fails
 
-1. **Make changes** to the configuration files.
-2. **Push commits** to the repository.
-3. **Wait for CI completion**: Allow sufficient time for GitHub Actions to complete:
-   - For formatting/check: Wait at least 5 minutes
-   - For VM tests: Wait at least 15 minutes
-4. **Verify results**: Check the workflow run status on GitHub.
-5. **Resolve all errors**: If CI fails, analyze the error output and fix all issues before considering the task complete.
-
-> **Critical**: Do not leave unresolved errors. All CI checks must pass before concluding your work.
-
-## Key Commands (for reference)
-
-```bash
-# Apply NixOS configuration (run on NixOS host)
-sudo nixos-rebuild switch --flake .#Citrus
-
-# Format code (runs nixpkgs-fmt)
-nix fmt
-
-# Validate flake
-nix flake check
-
-# Update flake inputs
-nix flake update
-
-```
+> **Critical**: A task is not complete until both local validation passes and all CI checks are green.
 
 ## Common Agent Tasks
-
 ### Adding a CLI tool via Home Manager
-
-Edit `home/takahiro/programs/cli-tools.nix` and add the package to the appropriate list.
+Edit `home-manager/programs.nix` and add the package to the appropriate list.
 
 ### Adding a new NixOS module
-
 1. Create `modules/nixos/<module-name>.nix`
 2. Import it in the appropriate host's `default.nix`
 
 ### Editing Citrus host config
-
-Prefer adding or editing host slices in `hosts/citrus/` rather than growing `hosts/citrus/default.nix`.
+Prefer editing `hosts/citrus/system.nix` or `hosts/citrus/desktop.nix` rather than growing `hosts/citrus/default.nix`.
 
 ### Adding a new host
-
 1. Create `hosts/<hostname>/default.nix` and `hardware-configuration.nix`
 2. Add the host to `vars/default.nix`
-3. Add the nixosConfiguration output in `flake.nix`
+3. Add the nixosConfiguration output in `flake/nixos-configurations.nix`
 
 ## Example Prompts
-
 ```bash
-opencode "Add ripgrep via home-manager in cli-tools.nix and rebuild Citrus"
+opencode "Add ripgrep via home-manager/programs.nix and rebuild Citrus"
 opencode "Add a new NixOS host 'Mikan' based on Citrus and update flake outputs"
 opencode "Nix build failed with: <error>. Find the cause and fix it."
 ```
 
 ## Error Resolution Protocol
+### Local Errors
+1. Read the full error message from the terminal
+2. Identify the root cause: syntax errors, missing imports, incorrect attribute paths, etc.
+3. Fix all issues
+4. Re-run validation and apply
 
-When errors occur in GitHub Actions:
+### CI/CD Errors
+1. Read the full error message from the GitHub Actions workflow logs
+2. Identify the root cause: syntax errors, missing imports, incorrect attribute paths, etc.
+3. Fix all issues locally first
+4. Commit and push the corrections
+5. Wait and verify that CI passes before finishing
 
-1. **Read the full error message** from the workflow logs.
-2. **Identify the root cause**: syntax errors, missing imports, incorrect attribute paths, etc.
-3. **Fix all issues**: Do not stop at partial fixes.
-4. **Commit and push** the corrections.
-5. **Wait and verify** that CI passes before finishing.
-
-Remember: A task is not complete until all CI checks are green.
+Remember: A task is not complete until both local validation passes and all CI checks are green.

@@ -1,6 +1,9 @@
+let
+  username = "takahiro";
+in
 {
-  user = "takahiro";
-  homeDirectory = "/home/takahiro";
+  inherit username;
+  homeDirectory = "/home/${username}";
   gitUsername = "Lupo409";
   gitEmail = "249657796+lupo409@users.noreply.github.com";
 

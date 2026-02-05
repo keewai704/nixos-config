@@ -6,6 +6,6 @@
     extraSpecialArgs = {
       inherit inputs vars;
     };
-    users.${vars.user} = import ../../home/takahiro/default.nix;
+    users.${vars.username} = import ../../home-manager/default.nix;
   };
 }

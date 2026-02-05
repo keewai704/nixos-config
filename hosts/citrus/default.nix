@@ -11,6 +11,9 @@
     ../../modules/nixos/fcitx5.nix
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/pipewire.nix
+    ../../modules/nixos/tailscale.nix
+    ../../modules/nixos/sops.nix
+    ./networking.nix
     ./system.nix
     ./desktop.nix
     ./home-manager.nix

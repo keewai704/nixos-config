@@ -1,7 +1,5 @@
 { ... }:
 {
-  nixpkgs.config.allowUnfree = true;
-
   networking.firewall = {
     enable = true;
     allowPing = true;

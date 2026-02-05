@@ -9,7 +9,7 @@ in
       system = hostConfig.system;
     in
     lib.nixosSystem {
-      inherit system;
+      system = system;
       specialArgs = {
         inherit inputs vars;
       };
