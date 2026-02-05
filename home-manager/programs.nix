@@ -222,11 +222,8 @@ in
                   "fanboy-cookiemonster"
                   "easylist-annoyances"
                   "ublock-annoyances"
+                  "https://github.com/Yuki2718/adblock2/raw/refs/heads/main/japanese/jpf-plus.txt"
                 ];
-                filters = [
-                  "! https://github.com/Yuki2718/adblock2/raw/refs/heads/main/japanese/jpf-plus.txt"
-                  "! This file is managed by Nix: home-manager/programs.nix"
-                ] ++ ublockFilters;
               };
             };
           };
@@ -277,7 +274,7 @@ in
         eval "$(starship init zsh)"
         eval "$(zoxide init zsh)"
 
-        export EDITOR=nvim
+        export EDITOR=nano
 
         setopt HIST_IGNORE_SPACE
         setopt HIST_IGNORE_ALL_DUPS
@@ -292,89 +289,79 @@ in
       enableZshIntegration = true;
       settings = {
         format = lib.concatStrings [
-          "[┌](bold blue)"
-          "[ ](bg:blue fg:blue)"
-          "[ ](bg:blue fg:black)"
-          "[│](bold blue)"
-          "[ ](bg:none fg:blue)"
+          "[░▒▓](#a3aed2)"
+          "[  ](bg:#a3aed2 fg:#090c0c)"
+          "[](bg:#769ff0 fg:#a3aed2)"
           "$directory"
-          "[ ](bg:none fg:blue)"
-          "[│](bold blue)"
-          "[ ](bg:none fg:blue)"
+          "[](fg:#769ff0 bg:#394260)"
           "$git_branch"
           "$git_status"
-          "[ ](bg:none fg:blue)"
-          "[│](bold blue)"
-          "[ ](bg:none fg:blue)"
+          "[](fg:#394260 bg:#212736)"
           "$nodejs"
-          "$python"
           "$rust"
           "$golang"
-          "[ ](bg:none fg:blue)"
-          "[│](bold blue)"
-          "[ ](bg:none fg:blue)"
-          "$status"
+          "$php"
+          "[](fg:#212736 bg:#1d2230)"
+          "$time"
+          "[ ](fg:#1d2230)"
+          "\n$character"
         ];
         add_newline = false;
         line_break.disabled = true;
 
-        palette = "tokyonight";
-
-        palettes.tokyonight = {
-          black = "#15161E";
-          blue = "#7aa2f7";
-          cyan = "#7dcfff";
-          green = "#9ece6a";
-          magenta = "#bb9af7";
-          red = "#f7768e";
-          white = "#c0caf5";
-          yellow = "#e0af68";
-        };
-
         directory = {
-          style = "fg:magenta bold";
+          style = "fg:#e3e5e5 bg:#769ff0";
+          format = "[ $path ]($style)";
           truncation_length = 3;
-          truncate_to_repo = false;
+          truncation_symbol = "…/";
+          substitutions = {
+            "Documents" = "󰈙 ";
+            "Downloads" = " ";
+            "Music" = " ";
+            "Pictures" = " ";
+          };
         };
 
         git_branch = {
-          style = "fg:green";
-          symbol = "";
+          symbol = "";
+          style = "bg:#394260";
+          format = "[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)";
         };
 
         git_status = {
-          style = "fg:red";
-          format = "[[\${ahead}\${behind}\${staged}\${modified}\${untracked}\${deleted}]($style)]";
-          ahead = "↑";
-          behind = "↓";
-          staged = "●";
-          modified = "●";
-          untracked = "●";
-          deleted = "✖";
+          style = "bg:#394260";
+          format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)";
         };
 
         nodejs = {
-          style = "fg:green";
-          symbol = "JS ";
-          format = "[\${symbol}\${version}]($style)";
-        };
-
-        python = {
-          style = "fg:yellow";
-          symbol = "PY ";
-          format = "[\${symbol}\${version}]($style)";
+          symbol = "";
+          style = "bg:#212736";
+          format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
         };
 
         rust = {
-          style = "fg:red";
-          symbol = "RS ";
-          format = "[\${symbol}\${version}]($style)";
+          symbol = "";
+          style = "bg:#212736";
+          format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
         };
 
         golang = {
-          style = "fg:cyan";
-          symbol = "GO ";
-          format = "[\${symbol}\${version}]($style)";
+          symbol = "";
+          style = "bg:#212736";
+          format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+        };
+
+        php = {
+          symbol = "";
+          style = "bg:#212736";
+          format = "[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)";
+        };
+
+        time = {
+          disabled = false;
+          time_format = "%R";
+          style = "bg:#1d2230";
+          format = "[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)";
         };
 
         status = {
