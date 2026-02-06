@@ -9,11 +9,11 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     SDL_VIDEODRIVER = "wayland";
     _JAVA_AWT_WM_NONREPARENTING = "1";
-    DISPLAY = ":0";
   };
 
   environment.systemPackages = with pkgs; [
     xwayland
+    xorg.libXcursor
     qt6Packages.qt6ct
     libsForQt5.qt5ct
     qt6Packages.qtstyleplugin-kvantum
@@ -31,5 +31,4 @@
 
   # Ensure XWayland is properly configured
   services.xserver.enable = true;
-  services.xserver.displayManager.startx.enable = true;
 }

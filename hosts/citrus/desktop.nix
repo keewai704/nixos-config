@@ -14,7 +14,7 @@
     enableAudioWavelength = true;
     enableCalendarEvents = true;
     enableClipboardPaste = true;
-    quickshell.package = inputs.dankmaterialshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
+    quickshell.package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.quickshell;
     plugins = {
       nixMonitor.enable = true;
       tailscale.enable = true;

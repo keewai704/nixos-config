@@ -45,11 +45,11 @@
         "quickshell": "quickshell"
       },
       "locked": {
-        "lastModified": 1770348105,
-        "narHash": "sha256-WP7try70FcR9QgEO3lnhU761AL+qUaj92SjuAoSfac0=",
+        "lastModified": 1770384017,
+        "narHash": "sha256-LEGcIKyR9m8Q7z1gHDByR3d6fxGiaeWCl2s60kDPusQ=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "ac84cadd77d3b1daf4a1da1a54294c991d7a5b32",
+        "rev": "c5a21f8da0eaf26e7d9c84553e5aee79b7b1c2e4",
         "type": "github"
       },
       "original": {
@@ -226,11 +226,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1770373616,
-        "narHash": "sha256-3ds3B1e01KjNknl+ATS2KUSjWfhQuKmXtbj/oRLrzyc=",
+        "lastModified": 1770382969,
+        "narHash": "sha256-/o2cDo1pcybZxaoa+HJSLDODqv9oiR3HXlWnmE2NFCg=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "5bd41bb12916ecb056a1d42dfef14cba0b7ba397",
+        "rev": "d8df3ab20294305cccd0961282f7dd20ef02ca3a",
         "type": "github"
       },
       "original": {
@@ -284,6 +284,26 @@
         "url": "https://git.outfoxxed.me/quickshell/quickshell"
       }
     },
+    "quickshell_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769593411,
+        "narHash": "sha256-WW00FaBiUmQyxvSbefvgxIjwf/WmRrEGBbwMHvW/7uQ=",
+        "ref": "refs/heads/master",
+        "rev": "1e4d804e7f3fa7465811030e8da2bf10d544426a",
+        "revCount": 732,
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.outfoxxed.me/quickshell/quickshell"
+      }
+    },
     "root": {
       "inputs": {
         "dankmaterialshell": "dankmaterialshell",
@@ -293,6 +313,7 @@
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs",
         "nur": "nur",
+        "quickshell": "quickshell_2",
         "sops-nix": "sops-nix"
       }
     },
