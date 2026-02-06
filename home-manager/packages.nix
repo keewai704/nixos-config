@@ -8,7 +8,7 @@
     obs-studio
     prismlauncher
     mpv
-    wpsoffice
+    onlyoffice-desktopeditors
     dust
     nano
     tree

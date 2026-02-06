@@ -188,6 +188,8 @@ in
           "services.sync.engine.creditcards" = false;
           "sidebar.visibility" = "expand-on-hover";
           "sidebar.expandOnHover" = true;
+          "browser.download.useDownloadDir" = true;
+          "browser.download.dir" = "\${env:HOME}/Downloads";
         };
         extensions.packages = [
           addons.bonjourr-startpage
