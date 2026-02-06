@@ -1,15 +1,16 @@
 { config, lib, ... }:
 {
-  sops.secrets."network/ap0_psk" = { };
-  sops.templates.networkmanager_env = {
-    path = "/run/secrets/network-manager.env";
-    owner = "root";
-    group = "root";
-    mode = "0400";
-    content = ''
-      AP0_PSK=${config.sops.placeholder."network/ap0_psk"}
-    '';
-  };
+  # network/ap0_pskはsopsを使わない
+  # sops.secrets."network/ap0_psk" = { };
+  # sops.templates.networkmanager_env = {
+  #   path = "/run/secrets/network-manager.env";
+  #   owner = "root";
+  #   group = "root";
+  #   mode = "0400";
+  #   content = ''
+  #     AP0_PSK=${config.sops.placeholder."network/ap0_psk"}
+  #   '';
+  # };
 
   hardware.wirelessRegulatoryDatabase = true;
 
@@ -29,7 +30,7 @@
         macAddress = "permanent";
       };
       ensureProfiles = {
-        environmentFiles = [ config.sops.templates.networkmanager_env.path ];
+        # environmentFiles = [ config.sops.templates.networkmanager_env.path ];
         profiles = {
           eth0 = {
             connection = {
@@ -63,7 +64,8 @@
             };
             wifi-security = {
               key-mgmt = "wpa-psk";
-              psk = "$AP0_PSK";
+              # pskは直接設定（sopsを使わない）
+              psk = "g63867s6";
             };
             ipv4 = {
               method = "shared";

@@ -419,45 +419,14 @@ in
     force = true;
   };
 
-  xdg.configFile."niri/config.kdl" = {
-    source = ./niri-config.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/binds.kdl" = {
-    source = ./dms/binds.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/layout.kdl" = {
-    source = ./dms/layout.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/outputs.kdl" = {
-    source = ./dms/outputs.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/colors.kdl" = {
-    source = ./dms/colors.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/alttab.kdl" = {
-    source = ./dms/alttab.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/cursor.kdl" = {
-    source = ./dms/cursor.kdl;
-    force = true;
-  };
-
-  xdg.configFile."niri/dms/wpblur.kdl" = {
-    source = ./dms/wpblur.kdl;
-    force = true;
-  };
+  home.file.".config/niri/config.kdl".source = ./niri-config.kdl;
+  home.file.".config/niri/dms/binds.kdl".source = ./dms/binds.kdl;
+  home.file.".config/niri/dms/layout.kdl".source = ./dms/layout.kdl;
+  home.file.".config/niri/dms/outputs.kdl".source = ./dms/outputs.kdl;
+  home.file.".config/niri/dms/colors.kdl".source = ./dms/colors.kdl;
+  home.file.".config/niri/dms/alttab.kdl".source = ./dms/alttab.kdl;
+  home.file.".config/niri/dms/cursor.kdl".source = ./dms/cursor.kdl;
+  home.file.".config/niri/dms/wpblur.kdl".source = ./dms/wpblur.kdl;
 
   xdg.configFile."DankMaterialShell/firefox.css" = {
     source = ./dms/firefox.css;

@@ -107,15 +107,24 @@ sudo sops --encrypt --in-place /etc/nixos/secrets.yaml
    sops /etc/nixos/secrets.yaml
    ```
 
-4. **DMS の天気ロケーション（緯度経度）**
-   `dms.weather_coordinates` に `lat,lon` 形式で設定します。
-   ```yaml
-   dms:
-     weather_coordinates: "35.681236,139.767125"
-   ```
-   例: 東京駅付近
+4. **ユーザーパスワード**
+    `user.hashedPassword` にパスワードハッシュを設定します。
+    ```bash
+    mkpasswd -m sha-512
+    ```
+    ```yaml
+    user:
+      hashedPassword: "<your-hashed-password>"
+    ```
 
-5. **適用**
+5. **DMS の天気ロケーション（緯度経度）**
+    `dms.weather_coordinates` に `lat,lon` 形式で設定します。
+    ```yaml
+    dms:
+      weather_coordinates: "<latitude>,<longitude>"
+    ```
+
+6. **適用**
    ```bash
    sudo nixos-rebuild switch --flake .#Citrus
    ```
@@ -143,7 +152,7 @@ sops --decrypt /etc/nixos/secrets.yaml | \
 #### DMS 天気の座標を更新する
 ```bash
 sops --decrypt /etc/nixos/secrets.yaml | \
-  jq '.dms.weather_coordinates="35.681236,139.767125"' | \
+  jq '.dms.weather_coordinates="<latitude>,<longitude>"' | \
   sudo sops --encrypt --output /etc/nixos/secrets.yaml /dev/stdin
 ```
 
