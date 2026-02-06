@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    discord
+    discord-ptb
+    discord-canary
     bitwarden-desktop
     obs-studio
     prismlauncher
