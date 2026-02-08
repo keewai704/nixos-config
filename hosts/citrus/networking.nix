@@ -65,7 +65,7 @@
               mode = "ap";
               ssid = "TPLink-8732";
               band = "a";
-              channel = 5;
+              channel = 36;
               powersave = 2;
             };
             wifiSecurity = {
