@@ -58,7 +58,7 @@
             connection = {
               id = "ap0";
               type = "802-11-wireless";
-              interface-name = "wlan0";
+              interfaceName = "wlan0";
               autoconnect = true;
             };
             wifi = {
@@ -68,8 +68,8 @@
               channel = 5;
               powersave = 2;
             };
-            wifi-security = {
-              key-mgmt = "wpa-psk";
+            wifiSecurity = {
+              keyMgmt = "wpa-psk";
               psk = "$AP0_PSK";
               proto = "rsn";
               pairwise = "ccmp";
